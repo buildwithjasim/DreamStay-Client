@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, Navigate, useNavigate } from 'react-router';
 import AuthContext from '../context/AuthContext';
+import Swal from 'sweetalert2';
 
 function Login() {
-  const { loginUser } = useContext(AuthContext);
+  const { loginUser, signInWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogin = e => {
@@ -21,6 +22,31 @@ function Login() {
       })
       .catch(error => {
         console.log(error);
+      });
+  };
+
+  const handleGoogleLogin = () => {
+    signInWithGoogle()
+      .then(res => {
+        console.log(res);
+
+        Swal.fire({
+          title: 'Success!',
+          text: 'You Are Successfully Login.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+        navigate('/');
+      })
+      .catch(error => {
+        console.log(error);
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+          footer: '<a href="#">Why do I have this issue?</a>',
+        });
       });
   };
 
@@ -60,7 +86,10 @@ function Login() {
 
         <div className="divider">OR</div>
 
-        <button className="btn btn-outline w-full text-blue-600">
+        <button
+          onClick={handleGoogleLogin}
+          className="btn btn-outline w-full text-blue-600"
+        >
           <i className="fa-brands fa-google mr-2"></i> Continue with Google
         </button>
 
