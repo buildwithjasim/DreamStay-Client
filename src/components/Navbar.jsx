@@ -50,6 +50,11 @@ export default function Navbar() {
               Home
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/rooms" className="btn btn-ghost">
+              Rooms
+            </NavLink>
+          </li>
         </ul>
       </div>
       <div className="navbar-end">
