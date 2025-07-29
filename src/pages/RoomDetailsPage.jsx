@@ -17,7 +17,7 @@ const RoomDetailsPage = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/rooms/${id}`);
+        const res = await axios.get(`import.meta.env.VITE_API_URL/rooms/${id}`);
         setRoom(res.data);
         setLoading(false);
       } catch (err) {
@@ -34,9 +34,12 @@ const RoomDetailsPage = () => {
     setError('');
     setSuccess('');
     try {
-      const res = await axios.post(`http://localhost:3000/rooms/${id}/book`, {
-        bookingDate: bookingDate.toISOString().split('T')[0],
-      });
+      const res = await axios.post(
+        `import.meta.env.VITE_API_URL/rooms/${id}/book`,
+        {
+          bookingDate: bookingDate.toISOString().split('T')[0],
+        }
+      );
       setSuccess(res.data.message);
       setIsModalOpen(false);
     } catch (err) {
