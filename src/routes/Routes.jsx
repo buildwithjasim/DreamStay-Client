@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
@@ -7,31 +7,49 @@ import Register from '../pages/Register';
 import Rooms from '../pages/Rooms';
 import RoomDetails from '../pages/RoomDetails';
 import MyBookings from '../pages/MyBooking';
-
+import PrivateRoute from './PrivateRoute';
 // import ErrorPage from '../pages/ErrorPage';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    Component: MainLayout,
-    // errorElement: <ErrorPage></ErrorPage>,
+    element: <MainLayout />,
+    // errorElement: <ErrorPage />,
     children: [
       {
         path: '/',
         element: <Home />,
       },
-      { path: '/rooms', element: <Rooms /> },
+      {
+        path: '/rooms',
+        element: <Rooms />,
+      },
       {
         path: '/rooms/:id',
-        element: <RoomDetails />,
+        element: (
+          <PrivateRoute>
+            <RoomDetails />
+          </PrivateRoute>
+        ),
       },
       {
-        path: 'mybooking',
-        element: <MyBookings />,
+        path: '/mybooking',
+        element: (
+          <PrivateRoute>
+            <MyBookings />
+          </PrivateRoute>
+        ),
       },
-      { path: '/login', element: <Login /> },
-      { path: '/register', element: <Register /> },
+      {
+        path: '/login',
+        element: <Login />,
+      },
+      {
+        path: '/register',
+        element: <Register />,
+      },
     ],
   },
 ]);
+
 export default router;

@@ -29,7 +29,8 @@ const MyBookings = () => {
         setLoading(false);
       }
     };
-    if (user) fetchBookings();
+
+    if (user?.email) fetchBookings();
   }, [user, token]);
 
   const handleCancel = async id => {
@@ -46,7 +47,7 @@ const MyBookings = () => {
         await axios.delete(`${import.meta.env.VITE_API_URL}/bookings/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setBookings(bookings.filter(b => b._id !== id));
+        setBookings(prev => prev.filter(b => b._id !== id));
         Swal.fire('Cancelled!', 'Your booking has been cancelled.', 'success');
       } catch (err) {
         Swal.fire('Error', 'Failed to cancel booking.', 'error');
@@ -56,22 +57,32 @@ const MyBookings = () => {
 
   const handleUpdateDate = async id => {
     if (!selectedDate) return;
+
     try {
       await axios.patch(
         `${import.meta.env.VITE_API_URL}/bookings/${id}`,
         { bookingDate: selectedDate.toISOString().split('T')[0] },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       Swal.fire('Updated!', 'Booking date updated successfully.', 'success');
       setUpdatingId(null);
       setSelectedDate(null);
+
+      // Refresh updated data
+      setBookings(prev =>
+        prev.map(b =>
+          b._id === id
+            ? { ...b, bookingDate: selectedDate.toISOString().split('T')[0] }
+            : b
+        )
+      );
     } catch (err) {
       Swal.fire('Error', 'Failed to update date.', 'error');
     }
   };
 
   const handleReview = roomId => {
-    // Navigate to a separate review modal or form (to be implemented)
     Swal.fire('Coming Soon', 'Review functionality coming soon!', 'info');
   };
 
@@ -99,7 +110,7 @@ const MyBookings = () => {
                   <img
                     src={booking.image}
                     alt={booking.title}
-                    className="w-20 h-16 rounded"
+                    className="w-20 h-16 rounded object-cover"
                   />
                 </td>
                 <td>{booking.title}</td>
@@ -119,19 +130,24 @@ const MyBookings = () => {
                     Review
                   </button>
                   <button
-                    onClick={() => setUpdatingId(booking._id)}
+                    onClick={() => {
+                      setUpdatingId(booking._id);
+                      setSelectedDate(null);
+                    }}
                     className="btn btn-sm btn-warning"
                   >
                     Update Date
                   </button>
+
                   {updatingId === booking._id && (
-                    <div className="mt-2">
+                    <div className="mt-2 flex flex-col gap-2">
                       <DatePicker
                         selected={selectedDate}
                         onChange={date => setSelectedDate(date)}
                         minDate={new Date()}
                         dateFormat="yyyy-MM-dd"
-                        className="input input-bordered mr-2"
+                        className="input input-bordered"
+                        placeholderText="Select new date"
                       />
                       <button
                         onClick={() => handleUpdateDate(booking._id)}
