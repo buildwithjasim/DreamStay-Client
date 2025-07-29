@@ -1,6 +1,5 @@
-import { useContext, useState } from 'react';
-import React from 'react';
-import { Link, useNavigate } from 'react-router';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; // ✅ FIXED IMPORT
 import { updateProfile } from 'firebase/auth';
 import AuthContext from '../context/AuthContext';
 import Swal from 'sweetalert2';
@@ -17,7 +16,7 @@ const Register = () => {
     const photoURL = e.target.photoURL.value;
     const password = e.target.password.value;
 
-    // Password validation
+    // ✅ Password validation
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
 
@@ -34,28 +33,33 @@ const Register = () => {
     setError('');
 
     try {
-      const result = await createUser(email, password, name, photoURL);
-      await updateProfile(result.user, { displayName: name, photoURL });
+      const result = await createUser(email, password);
+      await updateProfile(result.user, {
+        displayName: name,
+        photoURL: photoURL,
+      });
+
       Swal.fire({
         title: 'Success!',
-        text: 'You Are Successfully Registered.',
+        text: 'You are successfully registered.',
         icon: 'success',
         confirmButtonText: 'OK',
       });
+
       navigate('/login');
     } catch (err) {
       setError(err.message);
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Something went wrong!',
+        text: err.message || 'Something went wrong!',
         footer: '<a href="#">Why do I have this issue?</a>',
       });
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6">Register Now</h2>
         <form onSubmit={handleRegister} className="space-y-4">
@@ -85,7 +89,7 @@ const Register = () => {
           </div>
           <div>
             <label className="label">
-              <span className="label-text">PhotoURL</span>
+              <span className="label-text">Photo URL</span>
             </label>
             <input
               type="text"

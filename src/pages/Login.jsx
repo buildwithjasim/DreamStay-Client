@@ -1,57 +1,60 @@
 import React, { useContext } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router';
+import { Link, useNavigate, useLocation } from 'react-router-dom'; // ✅ FIXED IMPORT
 import AuthContext from '../context/AuthContext';
 import Swal from 'sweetalert2';
 
 function Login() {
   const { loginUser, signInWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
 
   const handleLogin = e => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    console.log('Email:', email, 'Password:', password);
-
-    // loginUser
     loginUser(email, password)
-      .then(result => {
-        console.log(result.data);
-        navigate('/');
+      .then(() => {
+        Swal.fire({
+          title: 'Success!',
+          text: 'You are successfully logged in.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+        navigate(from, { replace: true }); // ✅ Redirect to previous page or home
       })
       .catch(error => {
-        console.log(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Login Failed',
+          text: error.message || 'Invalid email or password.',
+        });
       });
   };
 
   const handleGoogleLogin = () => {
     signInWithGoogle()
-      .then(res => {
-        console.log(res);
-
+      .then(() => {
         Swal.fire({
           title: 'Success!',
-          text: 'You Are Successfully Login.',
+          text: 'You are successfully logged in with Google.',
           icon: 'success',
           confirmButtonText: 'OK',
         });
-        navigate('/');
+        navigate(from, { replace: true });
       })
       .catch(error => {
-        console.log(error);
-
         Swal.fire({
           icon: 'error',
-          title: 'Oops...',
-          text: 'Something went wrong!',
-          footer: '<a href="#">Why do I have this issue?</a>',
+          title: 'Google Sign-in Failed',
+          text: error.message || 'Something went wrong!',
         });
       });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center  p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
         <h2 className="text-3xl font-bold text-center mb-6">Login Now</h2>
         <form onSubmit={handleLogin} className="space-y-4">
@@ -61,7 +64,7 @@ function Login() {
             </label>
             <input
               type="email"
-              placeholder="enter email"
+              placeholder="Enter email"
               name="email"
               className="input input-bordered w-full"
               required
@@ -74,14 +77,16 @@ function Login() {
             </label>
             <input
               type="password"
-              placeholder="enter password"
+              placeholder="Enter password"
               name="password"
               className="input input-bordered w-full"
               required
             />
           </div>
 
-          <button className="btn btn-primary w-full mt-4">Login</button>
+          <button type="submit" className="btn btn-primary w-full mt-4">
+            Login
+          </button>
         </form>
 
         <div className="divider">OR</div>

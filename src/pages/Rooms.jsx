@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
+
+import { Link } from 'react-router';
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -78,25 +79,27 @@ const Rooms = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {rooms.length > 0 ? (
             rooms.map((room, index) => (
-              <motion.div
-                key={index}
-                className="card bg-white shadow-md hover:shadow-lg transition"
-              >
-                <figure>
-                  <img
-                    src={room.image}
-                    alt={room.title}
-                    className="w-full h-60 object-cover"
-                  />
-                </figure>
-                <div className="card-body">
-                  <h2 className="text-xl font-bold">{room.title}</h2>
-                  <p className="text-sm text-gray-500">{room.description}</p>
-                  <p className="text-lg font-semibold text-[#ffc107]">
-                    ${room.price}
-                  </p>
-                </div>
-              </motion.div>
+              <Link to={`/rooms/${room._id}`}>
+                <motion.div
+                  key={index}
+                  className="card bg-white shadow-md hover:shadow-lg transition"
+                >
+                  <figure>
+                    <img
+                      src={room.image}
+                      alt={room.title}
+                      className="w-full h-60 object-cover"
+                    />
+                  </figure>
+                  <div className="card-body">
+                    <h2 className="text-xl font-bold">{room.title}</h2>
+                    <p className="text-sm text-gray-500">{room.description}</p>
+                    <p className="text-lg font-semibold text-[#ffc107]">
+                      ${room.price}
+                    </p>
+                  </div>
+                </motion.div>
+              </Link>
             ))
           ) : (
             <p className="col-span-3 text-center text-red-500 text-lg font-semibold">
