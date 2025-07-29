@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom'; // ✅ FIXED IMPORT
+import { Link, useNavigate, useLocation } from 'react-router';
 import AuthContext from '../context/AuthContext';
 import Swal from 'sweetalert2';
 
@@ -9,20 +9,37 @@ function Login() {
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
+  const fetchJWT = async email => {
+    try {
+      const res = await fetch('https://your-backend-url.com/jwt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem('access-token', data.token);
+      }
+    } catch (error) {
+      console.error('JWT fetch error:', error);
+    }
+  };
+
   const handleLogin = e => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
 
     loginUser(email, password)
-      .then(() => {
+      .then(result => {
+        fetchJWT(result.user.email);
         Swal.fire({
           title: 'Success!',
           text: 'You are successfully logged in.',
           icon: 'success',
           confirmButtonText: 'OK',
         });
-        navigate(from, { replace: true }); // ✅ Redirect to previous page or home
+        navigate(from, { replace: true });
       })
       .catch(error => {
         Swal.fire({
@@ -35,7 +52,8 @@ function Login() {
 
   const handleGoogleLogin = () => {
     signInWithGoogle()
-      .then(() => {
+      .then(result => {
+        fetchJWT(result.user.email);
         Swal.fire({
           title: 'Success!',
           text: 'You are successfully logged in with Google.',

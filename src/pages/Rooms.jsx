@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import React from 'react';
 import { Helmet } from 'react-helmet';
-
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -15,7 +14,9 @@ const Rooms = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:3000/rooms?minPrice=${minPrice}&maxPrice=${maxPrice}`
+        `${
+          import.meta.env.VITE_API_URL
+        }/rooms?minPrice=${minPrice}&maxPrice=${maxPrice}`
       );
       setRooms(res.data);
     } catch (error) {
@@ -36,12 +37,13 @@ const Rooms = () => {
   return (
     <div className="bg-[#f7f7f7] min-h-screen py-12 px-4">
       <Helmet>
-        <title> Rooms | DreamStay rooms</title>
+        <title>Rooms | DreamStay</title>
         <meta
           name="description"
           content="Filter rooms by price range and find the perfect stay at DreamStay Hotel."
         />
       </Helmet>
+
       <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
         Filter Rooms by Price
       </h1>
@@ -78,10 +80,11 @@ const Rooms = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {rooms.length > 0 ? (
-            rooms.map((room, index) => (
-              <Link to={`/rooms/${room._id}`}>
+            rooms.map(room => (
+              <Link to={`/rooms/${room._id}`} key={room._id}>
                 <motion.div
-                  key={index}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   className="card bg-white shadow-md hover:shadow-lg transition"
                 >
                   <figure>

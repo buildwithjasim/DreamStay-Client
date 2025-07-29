@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // ✅ FIXED IMPORT
+import { Link, useNavigate } from 'react-router';
 import { updateProfile } from 'firebase/auth';
 import AuthContext from '../context/AuthContext';
 import Swal from 'sweetalert2';
@@ -33,20 +33,49 @@ const Register = () => {
     setError('');
 
     try {
+      // ✅ Firebase user creation
       const result = await createUser(email, password);
+
+      // ✅ Update Firebase profile
       await updateProfile(result.user, {
         displayName: name,
         photoURL: photoURL,
       });
 
-      Swal.fire({
-        title: 'Success!',
-        text: 'You are successfully registered.',
-        icon: 'success',
-        confirmButtonText: 'OK',
+      // ✅ Save user to database
+      const saveUser = { name, email, photoURL };
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(saveUser),
       });
 
-      navigate('/login');
+      if (res.ok) {
+        // ✅ Get JWT token
+        const tokenRes = await fetch(`${import.meta.env.VITE_API_URL}/jwt`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        const tokenData = await tokenRes.json();
+        localStorage.setItem('token', tokenData.token);
+
+        Swal.fire({
+          title: 'Success!',
+          text: 'You are successfully registered.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+
+        navigate('/');
+      } else {
+        throw new Error('Failed to save user in DB');
+      }
     } catch (err) {
       setError(err.message);
       Swal.fire({
