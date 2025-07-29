@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import AuthContext from '../context/AuthContext'; // assuming you have this context for auth
+import AuthContext from '../context/AuthContext'; // Assuming you have this context for auth
 
-const RoomDetailsPage = () => {
+const RoomDetails = () => {
   const { id } = useParams();
-  const { user, token } = useContext(AuthContext); // Assuming you store JWT token in context
+  const { user, token } = useContext(AuthContext); // Assuming JWT token is stored in context
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [bookingDate, setBookingDate] = useState(null);
@@ -54,7 +54,8 @@ const RoomDetailsPage = () => {
       );
       setSuccess(res.data.message);
       setIsModalOpen(false);
-      // Optionally refetch room data to update availability
+
+      // Refetch room data after booking
       const updatedRoom = await axios.get(
         `${import.meta.env.VITE_API_URL}/rooms/${id}`
       );
@@ -88,10 +89,10 @@ const RoomDetailsPage = () => {
           <button
             onClick={() => setIsModalOpen(true)}
             className="btn btn-primary"
-            disabled={!room.isAvailable}
-            title={room.isAvailable ? 'Book this room' : 'Room is unavailable'}
+            disabled={!room.availability}
+            title={room.availability ? 'Book this room' : 'Room is unavailable'}
           >
-            {room.isAvailable ? 'Book Now' : 'Unavailable'}
+            {room.availability ? 'Book Now' : 'Unavailable'}
           </button>
         </div>
       </div>
@@ -163,4 +164,4 @@ const RoomDetailsPage = () => {
   );
 };
 
-export default RoomDetailsPage;
+export default RoomDetails;

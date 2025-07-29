@@ -3,11 +3,10 @@ import { createBrowserRouter } from 'react-router';
 import MainLayout from '../layouts/MainLayout';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
-// import PrivateRoute from '../routes/PrivateRoute';
-
 import Register from '../pages/Register';
 import Rooms from '../pages/Rooms';
-import RoomDetailsPage from '../pages/RoomDetailsPage';
+import RoomDetails from '../pages/RoomDetails';
+import MyBookings from '../pages/MyBooking';
 
 // import ErrorPage from '../pages/ErrorPage';
 
@@ -23,8 +22,12 @@ const router = createBrowserRouter([
       },
       { path: '/rooms', element: <Rooms /> },
       {
-        path: '/roomDetailsPage',
-        element: <RoomDetailsPage />,
+        path: '/rooms/:id',
+        element: <RoomDetails />,
+      },
+      {
+        path: 'mybooking',
+        element: <MyBookings />,
       },
       { path: '/login', element: <Login /> },
       { path: '/register', element: <Register /> },

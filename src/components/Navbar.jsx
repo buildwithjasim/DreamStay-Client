@@ -55,6 +55,11 @@ export default function Navbar() {
               Rooms
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/mybooking" className="btn btn-ghost">
+              My Booking
+            </NavLink>
+          </li>
         </ul>
       </div>
       <div className="navbar-end">
