@@ -1,3 +1,4 @@
+// src/provider/AuthProvider.jsx
 import React, { useEffect, useState } from 'react';
 import AuthContext from '/src/context/AuthContext.jsx';
 import {
@@ -7,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from 'firebase/auth';
 import { auth } from '../firebase/firebase.init';
 import axios from 'axios';
@@ -14,51 +16,72 @@ import axios from 'axios';
 const googleProvider = new GoogleAuthProvider();
 
 export default function AuthProvider({ children }) {
-  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(null);
 
-  // 🔐 Create new user with email/password
-  const createUser = (email, password) => {
+  // ✅ Register user
+  const createUser = async (email, password, name, photo) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    await updateProfile(userCredential.user, {
+      displayName: name || 'New User',
+      photoURL: photo || 'https://i.ibb.co/2yqF1xF/default-user.png',
+    });
+
+    setUser({ ...userCredential.user, displayName: name, photoURL: photo });
+    return userCredential;
   };
 
-  // 🔓 Login user
+  // ✅ Login existing user
   const loginUser = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  // 🔑 Sign in with Google
+  // ✅ Google login
   const signInWithGoogle = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
-  // 🚪 Sign out
+  // ✅ Sign out
   const signOutUser = () => {
     setLoading(true);
-    return signOut(auth).then(() => {
-      localStorage.removeItem('access-token');
-    });
+    return signOut(auth)
+      .then(() => {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem('access-token');
+      })
+      .finally(() => setLoading(false));
   };
 
-  // 🧠 Monitor user state & handle JWT
+  // ✅ Monitor auth state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async currentUser => {
       setUser(currentUser);
 
       if (currentUser?.email) {
         try {
-          const { data } = await axios.post(
-            'https://your-server.com/jwt', // 🛠️ Replace with your actual backend endpoint
-            { email: currentUser.email }
-          );
-          localStorage.setItem('access-token', data.token);
+          const res = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
+            email: currentUser.email,
+          });
+          const fetchedToken = res.data?.token;
+          if (fetchedToken) {
+            setToken(fetchedToken);
+            localStorage.setItem('access-token', fetchedToken);
+          }
         } catch (err) {
-          console.error('JWT error:', err.message);
+          console.error('Error fetching JWT:', err.message);
         }
       } else {
+        setToken(null);
         localStorage.removeItem('access-token');
       }
 
@@ -68,9 +91,11 @@ export default function AuthProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
+  // ✅ Auth context values
   const authInfo = {
     user,
     loading,
+    token,
     createUser,
     loginUser,
     signInWithGoogle,

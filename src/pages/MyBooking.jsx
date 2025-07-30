@@ -4,6 +4,7 @@ import AuthContext from '../context/AuthContext';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Swal from 'sweetalert2';
+import Rating from 'react-rating-stars-component';
 
 const MyBookings = () => {
   const { user, token } = useContext(AuthContext);
@@ -11,6 +12,9 @@ const MyBookings = () => {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [showReviewId, setShowReviewId] = useState(null);
+  const [reviewText, setReviewText] = useState('');
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -69,7 +73,6 @@ const MyBookings = () => {
       setUpdatingId(null);
       setSelectedDate(null);
 
-      // Refresh updated data
       setBookings(prev =>
         prev.map(b =>
           b._id === id
@@ -82,8 +85,40 @@ const MyBookings = () => {
     }
   };
 
-  const handleReview = roomId => {
-    Swal.fire('Coming Soon', 'Review functionality coming soon!', 'info');
+  const handleSubmitReview = async booking => {
+    if (!rating || !reviewText.trim()) {
+      return Swal.fire(
+        'Error',
+        'Please fill in rating and comment.',
+        'warning'
+      );
+    }
+
+    const reviewData = {
+      roomId: booking.roomId,
+      reviewer: user.displayName,
+      reviewerImage: user?.photoURL,
+      email: user?.email,
+      rating,
+      comment: reviewText,
+      createdAt: new Date().toISOString(),
+    };
+
+    console.log(reviewData);
+
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/reviews`, reviewData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      Swal.fire('Success!', 'Review submitted successfully.', 'success');
+      setShowReviewId(null);
+      setReviewText('');
+      setRating(0);
+    } catch (err) {
+      console.error(err);
+      Swal.fire('Error', 'Failed to submit review.', 'error');
+    }
   };
 
   if (loading)
@@ -116,28 +151,30 @@ const MyBookings = () => {
                 <td>{booking.title}</td>
                 <td>${booking.price}</td>
                 <td>{booking.bookingDate}</td>
-                <td className="space-x-2">
-                  <button
-                    onClick={() => handleCancel(booking._id)}
-                    className="btn btn-sm btn-error"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => handleReview(booking.roomId)}
-                    className="btn btn-sm btn-info"
-                  >
-                    Review
-                  </button>
-                  <button
-                    onClick={() => {
-                      setUpdatingId(booking._id);
-                      setSelectedDate(null);
-                    }}
-                    className="btn btn-sm btn-warning"
-                  >
-                    Update Date
-                  </button>
+                <td className="space-y-2">
+                  <div className="flex gap-2 flex-wrap">
+                    <button
+                      onClick={() => handleCancel(booking._id)}
+                      className="btn btn-sm btn-error"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => setShowReviewId(booking._id)}
+                      className="btn btn-sm btn-info"
+                    >
+                      Give Review
+                    </button>
+                    <button
+                      onClick={() => {
+                        setUpdatingId(booking._id);
+                        setSelectedDate(null);
+                      }}
+                      className="btn btn-sm btn-warning"
+                    >
+                      Update Date
+                    </button>
+                  </div>
 
                   {updatingId === booking._id && (
                     <div className="mt-2 flex flex-col gap-2">
@@ -155,6 +192,41 @@ const MyBookings = () => {
                       >
                         Save
                       </button>
+                    </div>
+                  )}
+
+                  {showReviewId === booking._id && (
+                    <div className="bg-base-200 p-3 rounded mt-2 space-y-2">
+                      <p className="font-semibold">
+                        Reviewer: {user.displayName}
+                      </p>
+                      <Rating
+                        count={5}
+                        size={24}
+                        value={rating}
+                        onChange={setRating}
+                        activeColor="#ffd700"
+                      />
+                      <textarea
+                        className="textarea textarea-bordered w-full"
+                        placeholder="Write your review..."
+                        value={reviewText}
+                        onChange={e => setReviewText(e.target.value)}
+                      ></textarea>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleSubmitReview(booking)}
+                          className="btn btn-sm btn-success"
+                        >
+                          Submit
+                        </button>
+                        <button
+                          onClick={() => setShowReviewId(null)}
+                          className="btn btn-sm btn-outline"
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
                   )}
                 </td>

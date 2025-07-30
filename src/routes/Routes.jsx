@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router';
 import MainLayout from '../layouts/MainLayout';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
@@ -8,13 +8,11 @@ import Rooms from '../pages/Rooms';
 import RoomDetails from '../pages/RoomDetails';
 import MyBookings from '../pages/MyBooking';
 import PrivateRoute from './PrivateRoute';
-// import ErrorPage from '../pages/ErrorPage';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
-    // errorElement: <ErrorPage />,
     children: [
       {
         path: '/',

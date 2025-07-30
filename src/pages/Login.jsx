@@ -3,78 +3,86 @@ import { Link, useNavigate, useLocation } from 'react-router';
 import AuthContext from '../context/AuthContext';
 import Swal from 'sweetalert2';
 
-function Login() {
+const Login = () => {
   const { loginUser, signInWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
 
+  // 🔐 Fetch JWT token and store it
   const fetchJWT = async email => {
     try {
-      const res = await fetch('https://your-backend-url.com/jwt', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/jwt`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
+
+      if (!res.ok) {
+        throw new Error(`Server returned ${res.status}`);
+      }
+
       const data = await res.json();
       if (data.token) {
-        localStorage.setItem('access-token', data.token);
+        localStorage.setItem('token', data.token);
+        return true;
+      } else {
+        throw new Error('Token missing in response');
       }
     } catch (error) {
-      console.error('JWT fetch error:', error);
+      console.error('JWT fetch error:', error.message);
+      Swal.fire('Error', 'JWT token fetch failed', 'error');
+      return false;
     }
   };
 
-  const handleLogin = e => {
+  // 🔑 Email/Password login
+  const handleLogin = async e => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    loginUser(email, password)
-      .then(result => {
-        fetchJWT(result.user.email);
-        Swal.fire({
-          title: 'Success!',
-          text: 'You are successfully logged in.',
-          icon: 'success',
-          confirmButtonText: 'OK',
-        });
+    try {
+      const result = await loginUser(email, password);
+      const tokenSuccess = await fetchJWT(result.user.email);
+
+      if (tokenSuccess) {
+        Swal.fire('Success!', 'You are successfully logged in.', 'success');
         navigate(from, { replace: true });
-      })
-      .catch(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Login Failed',
-          text: error.message || 'Invalid email or password.',
-        });
-      });
+      }
+    } catch (error) {
+      Swal.fire(
+        'Login Failed',
+        error.message || 'Invalid credentials.',
+        'error'
+      );
+    }
   };
 
-  const handleGoogleLogin = () => {
-    signInWithGoogle()
-      .then(result => {
-        fetchJWT(result.user.email);
-        Swal.fire({
-          title: 'Success!',
-          text: 'You are successfully logged in with Google.',
-          icon: 'success',
-          confirmButtonText: 'OK',
-        });
+  // 🔘 Google login
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithGoogle();
+      const tokenSuccess = await fetchJWT(result.user.email);
+
+      if (tokenSuccess) {
+        Swal.fire('Success!', 'Logged in with Google.', 'success');
         navigate(from, { replace: true });
-      })
-      .catch(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Google Sign-in Failed',
-          text: error.message || 'Something went wrong!',
-        });
-      });
+      }
+    } catch (error) {
+      Swal.fire(
+        'Google Sign-in Failed',
+        error.message || 'Something went wrong!',
+        'error'
+      );
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
         <h2 className="text-3xl font-bold text-center mb-6">Login Now</h2>
+
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="label">
@@ -82,8 +90,8 @@ function Login() {
             </label>
             <input
               type="email"
-              placeholder="Enter email"
               name="email"
+              placeholder="Enter email"
               className="input input-bordered w-full"
               required
             />
@@ -95,8 +103,8 @@ function Login() {
             </label>
             <input
               type="password"
-              placeholder="Enter password"
               name="password"
+              placeholder="Enter password"
               className="input input-bordered w-full"
               required
             />
@@ -128,6 +136,6 @@ function Login() {
       </div>
     </div>
   );
-}
+};
 
 export default Login;

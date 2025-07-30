@@ -1,154 +1,133 @@
 import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-import { updateProfile } from 'firebase/auth';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 import AuthContext from '../context/AuthContext';
+import { updateProfile } from 'firebase/auth';
 import Swal from 'sweetalert2';
 
 const Register = () => {
   const { createUser } = useContext(AuthContext);
-  const [error, setError] = useState('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = async e => {
-    e.preventDefault();
-    const name = e.target.name.value;
-    const email = e.target.email.value;
-    const photoURL = e.target.photoURL.value;
-    const password = e.target.password.value;
+  const onSubmit = async data => {
+    const { name, email, password, photo } = data;
 
     // ✅ Password validation
-    const uppercase = /[A-Z]/;
-    const lowercase = /[a-z]/;
-
     if (password.length < 6) {
-      return setError('Password must be at least 6 characters.');
+      return Swal.fire(
+        'Error',
+        'Password must be at least 6 characters.',
+        'error'
+      );
     }
-    if (!uppercase.test(password)) {
-      return setError('Password must contain at least one uppercase letter.');
+    if (!/[A-Z]/.test(password)) {
+      return Swal.fire(
+        'Error',
+        'Password must contain at least one uppercase letter.',
+        'error'
+      );
     }
-    if (!lowercase.test(password)) {
-      return setError('Password must contain at least one lowercase letter.');
+    if (!/[a-z]/.test(password)) {
+      return Swal.fire(
+        'Error',
+        'Password must contain at least one lowercase letter.',
+        'error'
+      );
     }
 
-    setError('');
-
+    setLoading(true);
     try {
-      // ✅ Firebase user creation
+      // ✅ Create Firebase user
       const result = await createUser(email, password);
 
       // ✅ Update Firebase profile
       await updateProfile(result.user, {
         displayName: name,
-        photoURL: photoURL,
+        photoURL: photo,
       });
 
-      // ✅ Save user to database
-      const saveUser = { name, email, photoURL };
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+      // ✅ Save user in database
+      const user = { name, email, photo };
+      const saveUserRes = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(saveUser),
+        body: JSON.stringify(user),
       });
 
-      if (res.ok) {
-        // ✅ Get JWT token
-        const tokenRes = await fetch(`${import.meta.env.VITE_API_URL}/jwt`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
-        });
+      if (!saveUserRes.ok) throw new Error('Failed to save user in DB');
 
-        const tokenData = await tokenRes.json();
-        localStorage.setItem('token', tokenData.token);
-
-        Swal.fire({
-          title: 'Success!',
-          text: 'You are successfully registered.',
-          icon: 'success',
-          confirmButtonText: 'OK',
-        });
-
-        navigate('/');
-      } else {
-        throw new Error('Failed to save user in DB');
-      }
-    } catch (err) {
-      setError(err.message);
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: err.message || 'Something went wrong!',
-        footer: '<a href="#">Why do I have this issue?</a>',
+      // ✅ Get JWT token
+      const tokenRes = await fetch(`${import.meta.env.VITE_API_URL}/jwt`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
       });
+
+      const tokenData = await tokenRes.json();
+      localStorage.setItem('token', tokenData.token);
+
+      Swal.fire('Success', 'Registration successful!', 'success');
+      navigate('/');
+    } catch (error) {
+      console.error(error.message);
+      Swal.fire('Error', error.message || 'Something went wrong', 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">Register Now</h2>
-        <form onSubmit={handleRegister} className="space-y-4">
-          <div>
-            <label className="label">
-              <span className="label-text">Name</span>
-            </label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              className="input input-bordered w-full"
-              required
-            />
-          </div>
-          <div>
-            <label className="label">
-              <span className="label-text">Email</span>
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              className="input input-bordered w-full"
-              required
-            />
-          </div>
-          <div>
-            <label className="label">
-              <span className="label-text">Photo URL</span>
-            </label>
-            <input
-              type="text"
-              name="photoURL"
-              placeholder="Photo URL"
-              className="input input-bordered w-full"
-            />
-          </div>
-          <div>
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              className="input input-bordered w-full"
-              required
-            />
-          </div>
-          {error && <p className="text-red-500">{error}</p>}
-          <button type="submit" className="btn btn-primary w-full">
-            Register
+        <h2 className="text-2xl font-bold text-center mb-6">Register</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <input
+            {...register('name', { required: true })}
+            placeholder="Name"
+            className="input input-bordered w-full"
+          />
+          <input
+            {...register('email', { required: true })}
+            type="email"
+            placeholder="Email"
+            className="input input-bordered w-full"
+          />
+          <input
+            {...register('photoURL', { required: true })}
+            type="url"
+            placeholder="Photo URL"
+            className="input input-bordered w-full"
+          />
+
+          <input
+            {...register('password', { required: true })}
+            type="password"
+            placeholder="Password"
+            className="input input-bordered w-full"
+          />
+          <button
+            type="submit"
+            className="btn btn-primary w-full"
+            disabled={loading}
+          >
+            {loading ? 'Registering...' : 'Register'}
           </button>
         </form>
         <p className="text-center mt-4">
           Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 underline">
+          <a href="/login" className="text-blue-600 underline">
             Login
-          </Link>
+          </a>
         </p>
       </div>
     </div>
