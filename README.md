@@ -1,89 +1,171 @@
 # 🏨 DreamStay - Hotel Booking Platform
 
-DreamStay is a modern hotel booking website where users can easily browse, filter, book rooms, and leave reviews. The platform is responsive, user-friendly, and secure.
+DreamStay is a modern, full-stack hotel booking application where users can browse available rooms, filter by preferences, book rooms for specific dates, and submit reviews. It offers a responsive, intuitive, and secure experience for both guests and admins.
+
+---
+
 ## 🌐 Live Site
 
-🔗 [(https://dreamstay-42147.web.app/)]
+🔗 [Visit DreamStay Live](https://dreamstay-42147.web.app/)
 
 ---
 
-## 🎯 Purpose
+## 📸 Screenshot
 
-The purpose of this project is to build a fully-featured, full-stack MERN hotel booking application that includes real-time room availability, user bookings, and a review system.
 
----
 
-## 🚀 Key Features
-
-- 🔐 Firebase Auth (Email/Password, Google Login)
-- 🔑 JWT-secured protected routes
-- 🛏 Room listing with price, features, and filtering
-- 📅 Booking rooms with custom date selection
-- 🗑 Cancel booking (with confirmation)
-- 🔄 Update booking date
-- ⭐ Submit and view room reviews
-- 🧑‍💻 Separate routes for authenticated users
-- 📱 Fully responsive design
-- ⚙️ Admin-only and user-only route protections
-- 🧾 SweetAlert2 and Toast notifications
-- 📦 Backend API with MongoDB, Express, JWT
+![DreamStay Screenshot](https://drive.google.com/file/d/1HoQfT_pUa4weSWq8GOxxKOPktQ4rZb6v/view?usp=sharing)
 
 ---
 
-## 🛠 Tech Stack
+## 🧰 Tech Stack
 
-- **Frontend:** React, React Router DOM, Tailwind CSS, Axios, React Hook Form, SweetAlert2, Firebase
-- **Backend:** Node.js, Express.js, MongoDB, JWT
-- **Hosting:** Firebase (Frontend), Vercel (Backend)
+### 🔷 Frontend:
+- React
+- React Router DOM
+- Tailwind CSS
+- Axios
+- React Hook Form
+- Firebase Authentication
+- SweetAlert2
+- React Toastify
+- Swiper
+
+### 🔷 Backend:
+- Node.js
+- Express.js
+- MongoDB (Native Driver)
+- JWT (JSON Web Token)
+- Dotenv
+- CORS
+- Morgan
+
+### 🔷 Hosting:
+- **Frontend:** Firebase  
+- **Backend:** Vercel
 
 ---
 
-## 📦 NPM Packages Used
+## ✨ Core Features
+
+- 🔐 **Authentication:** Firebase (Email/Password + Google Login)
+- 🔑 **Authorization:** JWT-secured protected routes
+- 🛏 **Room Listing:** View all rooms with price, features, and filters
+- 📅 **Room Booking:** Book rooms with date selection
+- 🔄 **Update Booking:** Modify booking dates after confirmation
+- 🗑 **Cancel Booking:** Remove existing bookings with confirmation
+- ⭐ **Room Reviews:** Submit and view reviews per room
+- 🧑‍💻 **Access Control:** Admin-only and user-only route protections
+- 📱 **Responsive Design:** Mobile and desktop-friendly UI
+- 🔔 **Notifications:** SweetAlert2 & Toast feedback
+
+---
+
+## 📦 Dependencies
+
+```
+Frontend:
+- react
+- react-dom
+- react-router-dom
+- axios
+- react-hook-form
+- firebase
+- react-toastify
+- sweetalert2
+- swiper
+- react-icons
+
+Backend:
+- express
+- mongodb
+- cors
+- dotenv
+- jsonwebtoken
+- morgan
+```
+
+---
+
+## 📁 Folder Structure
+
+```
+src/
+├── components/       # Reusable UI components
+├── pages/            # Page components (Rooms, Login, Bookings, etc.)
+├── layouts/          # Layout components (MainLayout, DashboardLayout)
+├── contexts/         # Auth context and provider
+├── routes/           # Protected & public route configurations
+└── utils/            # Utility functions (JWT, formatting, etc.)
+```
+
+---
+
+## 🧪 How to Run Locally
+
+### 1️⃣ Clone the Repository
 
 ```bash
-"axios"
-"firebase"
-"jsonwebtoken"
-"react"
-"react-dom"
-"react-hook-form"
-"react-icons"
-"react-router-dom"
-"react-toastify"
-"sweetalert2"
-"swiper"
-"cors"
-"dotenv"
-"express"
-"mongodb"
-"morgan"
-📁 Folder Structure (Frontend)
-bash
-Copy
-Edit
-src/
-│
-├── components/          # Reusable UI components
-├── pages/               # Page-level components (Rooms, Login, Bookings)
-├── layouts/             # Layout wrappers (MainLayout, DashboardLayout)
-├── contexts/            # Auth context and providers
-├── routes/              # Protected and public routes
-└── utils/               # Utility functions (JWT, date formatting)
-🧪 How to Run Locally
-Clone this repository
+git clone https://github.com/your-username/dreamstay.git
+cd dreamstay
+```
 
-Run npm install in both frontend and backend folders
+### 2️⃣ Install Dependencies
 
-Set up .env files for frontend and backend
+#### 🔹 Frontend
+```bash
+cd client
+npm install
+```
 
-Run backend server: npm run dev
+#### 🔹 Backend
+```bash
+cd server
+npm install
+```
 
-Run frontend dev server: npm run dev
+### 3️⃣ Set Up Environment Variables
 
-📬 Contact
-If you have any questions or suggestions:
+#### 🔹 Frontend `.env.local`
 
-📧 jasimuddinmkl1@gmail.com
+```env
+VITE_API_URL=http://localhost:5000
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+...
+```
 
+#### 🔹 Backend `.env`
 
-Thanks for visiting DreamStay!
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+```
+
+### 4️⃣ Run the Servers
+
+#### 🔹 Start Backend
+
+```bash
+cd server
+npm run dev
+```
+
+#### 🔹 Start Frontend
+
+```bash
+cd client
+npm run dev
+```
+
+---
+
+## 📬 Contact
+
+If you have any suggestions or feedback, feel free to reach out:
+
+📧 **jasimuddinmkl1@gmail.com**
+
+---
+
+## 🙏 Thanks for visiting DreamStay!
