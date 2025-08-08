@@ -14,7 +14,7 @@ DreamStay is a modern, full-stack hotel booking application where users can brow
 
 
 
-![DreamStay Screenshot](https://drive.google.com/file/d/1HoQfT_pUa4weSWq8GOxxKOPktQ4rZb6v/view?usp=sharing)
+![DreamStay Screenshot](https://drive.google.com/file/d/1HoQfT_pUa4weSWq8GOxxKOPktQ4rZb6v/view?usp=drive_link)
 
 ---
 
