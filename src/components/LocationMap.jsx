@@ -6,24 +6,27 @@ export default function HotelPage() {
   const position = [21.43388, 91.97165];
 
   return (
-    <div className="font-sans">
-      {/* Hotel Info */}
-      <section className="p-8 md:p-16">
-        <h2 className="text-4xl font-bold mb-10 text-indigo-600 text-center">
+    <div className="font-sans bg-base-100 min-h-screen">
+      {/* Location Section */}
+      <section className="py-12">
+        <h2 className="text-4xl font-extrabold mb-8 text-primary text-center">
           Our Location
         </h2>
-        <p className="mb-6 text-gray-700 text-2xl text-center">
-          Sea Pearl Beach Resort & Spa Hotel is located in the center of Cox's
-          Bazar, near all major attractions and transport hubs.
+        <p className="max-w-3xl mx-auto mb-12 text-center text-lg md:text-xl text-gray-700 leading-relaxed">
+          DreamStay Beach Resort and Spa Hotel is located in the heart of Cox's
+          Bazar, conveniently close to major attractions, beaches, and
+          transportation hubs. Experience the beauty of the bay with easy access
+          to everything you need for a memorable stay.
         </p>
 
-        {/* Map Section */}
-        <div className="h-[400px] w-full rounded-xl overflow-hidden shadow-lg">
+        {/* Map */}
+        <div className="h-96 md:h-[450px] w-full rounded-xl shadow-lg overflow-hidden ring-1 ring-gray-200">
           <MapContainer
             center={position}
-            zoom={13}
+            zoom={14}
             scrollWheelZoom={false}
             className="h-full w-full"
+            aria-label="Map showing Sea Pearl Beach Resort & Spa location"
           >
             <TileLayer
               attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
@@ -31,9 +34,11 @@ export default function HotelPage() {
             />
             <Marker position={position}>
               <Popup>
-                Sea Pearl Beach Resort & Spa
+                <span className="font-semibold">
+                  DreamStay Beach Resort and Spa
+                </span>
                 <br />
-                We’re here!
+                You’re here!
               </Popup>
             </Marker>
           </MapContainer>

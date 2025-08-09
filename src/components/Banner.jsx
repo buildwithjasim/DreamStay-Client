@@ -46,7 +46,7 @@ export default function Banner() {
 
   return (
     <section
-      className="relative w-full h-[70vh] max-h-[600px] overflow-hidden mt-16"
+      className="relative w-full h-[70vh] max-h-[600px] overflow-hidden mt-16 "
       aria-label="Homepage Hero Section"
     >
       <AnimatePresence mode="wait">
