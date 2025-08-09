@@ -6,7 +6,6 @@ import Amenities from '../components/Amenities';
 import SpecialOfferModal from '../components/SpecialOfferModal';
 import FeaturedRooms from '../components/FeaturedRooms';
 import UserReviews from '../components/UserReviews';
-import PrivateRoute from '../routes/PrivateRoute';
 
 const Home = () => {
   return (

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router';
@@ -86,7 +85,7 @@ const Rooms = () => {
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="card bg-white shadow-md hover:shadow-lg transition"
+                  className="card bg-white shadow-md hover:shadow-lg transition max-w-sm"
                 >
                   <figure>
                     <img
@@ -95,9 +94,15 @@ const Rooms = () => {
                       className="w-full h-60 object-cover"
                     />
                   </figure>
-                  <div className="card-body">
-                    <h2 className="text-xl font-bold">{room.title}</h2>
-                    <p className="text-sm text-gray-500">{room.description}</p>
+                  <div className="card-body overflow-x-auto">
+                    <h2 className="text-xl font-bold whitespace-nowrap">
+                      {room.title}
+                    </h2>
+
+                    <p className="text-sm text-gray-500 whitespace-nowrap line-clamp-3">
+                      {room.description}
+                    </p>
+
                     <p className="text-lg font-semibold text-[#ffc107]">
                       ${room.price}
                     </p>
