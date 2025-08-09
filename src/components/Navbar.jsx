@@ -37,7 +37,8 @@ export default function Navbar() {
     );
   }
 
-  const navLinks = (
+  // Routes for all users
+  const baseLinks = (
     <>
       <li>
         <NavLink
@@ -65,36 +66,66 @@ export default function Navbar() {
           Rooms
         </NavLink>
       </li>
-      {user && (
-        <li>
-          <NavLink
-            to="/mybooking"
-            className={({ isActive }) =>
-              `btn btn-ghost rounded-md ${
-                isActive ? 'bg-primary text-white' : ''
-              }`
-            }
-            onClick={() => setDropdownOpen(false)}
-          >
-            My Booking
-          </NavLink>
-        </li>
-      )}
+    </>
+  );
+
+  // Additional routes for logged-in users
+  const loggedInLinks = (
+    <>
+      <li>
+        <NavLink
+          to="/mybooking"
+          className={({ isActive }) =>
+            `btn btn-ghost rounded-md ${
+              isActive ? 'bg-primary text-white' : ''
+            }`
+          }
+          onClick={() => setDropdownOpen(false)}
+        >
+          My Booking
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/profile"
+          className={({ isActive }) =>
+            `btn btn-ghost rounded-md ${
+              isActive ? 'bg-primary text-white' : ''
+            }`
+          }
+          onClick={() => setDropdownOpen(false)}
+        >
+          Profile
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/settings"
+          className={({ isActive }) =>
+            `btn btn-ghost rounded-md ${
+              isActive ? 'bg-primary text-white' : ''
+            }`
+          }
+          onClick={() => setDropdownOpen(false)}
+        >
+          Settings
+        </NavLink>
+      </li>
     </>
   );
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-base-100 shadow-md">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-primary shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Navbar Start */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             {/* Mobile menu button */}
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               aria-label="Toggle menu"
               aria-expanded={dropdownOpen}
-              className="btn btn-ghost lg:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              className="btn btn-ghost lg:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -118,14 +149,17 @@ export default function Navbar() {
             {/* Logo */}
             <Link
               to="/"
-              className="text-xl font-extrabold tracking-wide text-primary select-none"
+              className="text-2xl font-extrabold tracking-wide text-white select-none"
             >
               DreamStay
             </Link>
           </div>
 
           {/* Navbar Center - Desktop Menu */}
-          <ul className="hidden lg:flex lg:space-x-2">{navLinks}</ul>
+          <ul className="hidden lg:flex lg:space-x-2">
+            {baseLinks}
+            {user && loggedInLinks}
+          </ul>
 
           {/* Navbar End - User Info / Auth Buttons */}
           <div className="flex items-center gap-4">
@@ -148,7 +182,7 @@ export default function Navbar() {
                     </div>
                   )}
                   <span
-                    className="hidden sm:inline text-sm font-medium truncate max-w-[120px]"
+                    className="hidden sm:inline text-white text-sm font-medium truncate max-w-[120px]"
                     title={user.displayName}
                   >
                     {user.displayName}
@@ -156,7 +190,7 @@ export default function Navbar() {
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="btn btn-sm btn-primary"
+                  className="btn btn-sm btn-outline text-white border-white hover:bg-white hover:text-primary transition"
                   aria-label="Sign out"
                 >
                   Logout
@@ -166,8 +200,8 @@ export default function Navbar() {
               <NavLink
                 to="/login"
                 className={({ isActive }) =>
-                  `btn btn-ghost btn-sm rounded-md ${
-                    isActive ? 'bg-primary text-white' : ''
+                  `btn btn-sm btn-outline text-white border-white hover:bg-white hover:text-primary transition rounded-md ${
+                    isActive ? 'bg-white text-primary' : ''
                   }`
                 }
               >
@@ -180,8 +214,30 @@ export default function Navbar() {
 
       {/* Mobile Dropdown Menu */}
       {dropdownOpen && (
-        <div className="lg:hidden bg-base-100 shadow-md border-t border-gray-200">
-          <ul className="menu menu-compact p-2">{navLinks}</ul>
+        <div className="lg:hidden bg-primary shadow-md border-t border-primary">
+          <ul className="menu menu-compact p-4 text-white">
+            {baseLinks}
+            {user && loggedInLinks}
+            <li>
+              {user ? (
+                <button
+                  onClick={handleSignOut}
+                  className="btn btn-primary w-full mt-2"
+                  aria-label="Sign out"
+                >
+                  Logout
+                </button>
+              ) : (
+                <NavLink
+                  to="/login"
+                  className="btn btn-primary w-full mt-2"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  Login
+                </NavLink>
+              )}
+            </li>
+          </ul>
         </div>
       )}
     </nav>
