@@ -16,7 +16,7 @@ const slides = [
   },
   {
     id: 'slide2',
-    bgImage: 'https://i.ibb.co.com/N28vSpDp/room8.png',
+    bgImage: 'https://i.ibb.co/N28vSpDp/room8.png', // fixed broken URL
     title: 'Modern Rooms & Comfort',
     subtitle: 'Experience a luxury stay tailored to your comfort and style.',
     btnText: 'Explore Rooms',
@@ -45,7 +45,10 @@ export default function Banner() {
     setCurrent(prev => (prev === slides.length - 1 ? 0 : prev + 1));
 
   return (
-    <section className="relative w-full h-[70vh] overflow-hidden mt-15">
+    <section
+      className="relative w-full h-[70vh] max-h-[600px] overflow-hidden mt-16"
+      aria-label="Homepage Hero Section"
+    >
       <AnimatePresence mode="wait">
         <motion.div
           key={slides[current].id}
@@ -55,19 +58,22 @@ export default function Banner() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
-          aria-label={`Slide ${current + 1}: ${slides[current].title}`}
+          aria-live="polite"
+          aria-atomic="true"
         >
-          {/* Overlay for better text contrast */}
-          <div className="absolute inset-0 bg-opacity-60" />
-          <div className="relative flex flex-col items-center justify-center h-full text-center px-6 sm:px-12 md:px-20">
+          {/* Dark overlay for text contrast */}
+          <div className="absolute inset-0 bg-opacity-60"></div>
+
+          {/* Content Container */}
+          <div className="relative flex flex-col justify-center items-center h-full text-center px-6 sm:px-12 md:px-20 max-w-5xl mx-auto">
             <h2
-              className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 leading-tight"
+              className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 leading-tight drop-shadow-lg"
               style={{ color: slides[current].titleColor }}
             >
               {slides[current].title}
             </h2>
             <p
-              className="text-lg sm:text-xl md:text-2xl max-w-xl mx-auto mb-8"
+              className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto mb-8 drop-shadow-md"
               style={{ color: slides[current].subtitleColor }}
             >
               {slides[current].subtitle}
@@ -94,6 +100,7 @@ export default function Banner() {
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -115,6 +122,7 @@ export default function Banner() {
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
