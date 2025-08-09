@@ -45,7 +45,7 @@ export default function Banner() {
     setCurrent(prev => (prev === slides.length - 1 ? 0 : prev + 1));
 
   return (
-    <section className="relative w-full h-[70vh] overflow-hidden">
+    <section className="relative w-full h-[70vh] overflow-hidden mt-15">
       <AnimatePresence mode="wait">
         <motion.div
           key={slides[current].id}
