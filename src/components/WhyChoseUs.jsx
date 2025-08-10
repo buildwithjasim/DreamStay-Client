@@ -75,7 +75,7 @@ export default function WhyChooseUs() {
 
   return (
     <section
-      className="py-20 bg-luxury text-luxury text-center max-w-7xl mx-auto px-6"
+      className="py-20 bg-luxury text-luxury text-center"
       aria-labelledby="whychooseus-heading"
     >
       <h2
