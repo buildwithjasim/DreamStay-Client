@@ -17,8 +17,7 @@ export default function Footer() {
             { to: '/', label: 'Home' },
             { to: '/rooms', label: 'Rooms' },
             { to: '/mybooking', label: 'My Booking' },
-            { to: '/profile', label: 'Profile' },
-            { to: '/settings', label: 'Settings' },
+
             { to: '/about', label: 'About Us' },
             { to: '/contact', label: 'Contact' },
           ].map(({ to, label }) => (
