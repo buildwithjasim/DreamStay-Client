@@ -220,9 +220,8 @@ export default function RoomDetails() {
 
   if (loading || loadingRoom) {
     return (
-      <div className="max-w-5xl mx-auto px-4 mt-10 space-y-6">
-        <SkeletonCard />
-        <SkeletonCard />
+      <div>
+        <span className="loading loading-spinner loading-xl"></span>
       </div>
     );
   }

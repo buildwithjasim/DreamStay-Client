@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const FeaturedRooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -124,7 +124,7 @@ const FeaturedRooms = () => {
               <button
                 type="button"
                 onClick={() => handleBookNow(room._id)}
-                className="mt-auto btn-luxury focus:outline-none focus:ring-4 focus:ring-accent/50 transition"
+                className="mt-auto btn-luxury focus:outline-none focus:ring-4 focus:ring-accent/50 transition cursor-pointer"
                 aria-label={`Book now for ${room.title}`}
               >
                 Book Now
