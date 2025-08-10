@@ -16,7 +16,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async data => {
-    const { name, email, password, photo } = data;
+    const { name, email, password, photoURL } = data;
 
     // ✅ Password validation
     if (password.length < 6) {
@@ -49,16 +49,14 @@ const Register = () => {
       // ✅ Update Firebase profile
       await updateProfile(result.user, {
         displayName: name,
-        photoURL: photo,
+        photoURL,
       });
 
       // ✅ Save user in database
-      const user = { name, email, photo };
+      const user = { name, email, photo: photoURL };
       const saveUserRes = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user),
       });
 
@@ -67,9 +65,7 @@ const Register = () => {
       // ✅ Get JWT token
       const tokenRes = await fetch(`${import.meta.env.VITE_API_URL}/jwt`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
@@ -87,45 +83,104 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-luxury mt-10">
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">Register</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <input
-            {...register('name', { required: true })}
-            placeholder="Name"
-            className="input input-bordered w-full"
-          />
-          <input
-            {...register('email', { required: true })}
-            type="email"
-            placeholder="Email"
-            className="input input-bordered w-full"
-          />
-          <input
-            {...register('photoURL', { required: true })}
-            type="url"
-            placeholder="Photo URL"
-            className="input input-bordered w-full"
-          />
+        <h2 className="text-3xl font-extrabold text-heading text-center mb-6">
+          Register
+        </h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div>
+            <label
+              htmlFor="name"
+              className="block mb-1 font-semibold text-subtitle"
+            >
+              Name
+            </label>
+            <input
+              id="name"
+              {...register('name', { required: 'Name is required' })}
+              placeholder="Your full name"
+              className="input input-bordered w-full"
+            />
+            {errors.name && (
+              <p className="text-red-600 mt-1">{errors.name.message}</p>
+            )}
+          </div>
 
-          <input
-            {...register('password', { required: true })}
-            type="password"
-            placeholder="Password"
-            className="input input-bordered w-full"
-          />
+          <div>
+            <label
+              htmlFor="email"
+              className="block mb-1 font-semibold text-subtitle"
+            >
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              {...register('email', {
+                required: 'Email is required',
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: 'Invalid email address',
+                },
+              })}
+              placeholder="you@example.com"
+              className="input input-bordered w-full"
+            />
+            {errors.email && (
+              <p className="text-red-600 mt-1">{errors.email.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="photoURL"
+              className="block mb-1 font-semibold text-subtitle"
+            >
+              Photo URL
+            </label>
+            <input
+              id="photoURL"
+              type="url"
+              {...register('photoURL', { required: 'Photo URL is required' })}
+              placeholder="https://example.com/photo.jpg"
+              className="input input-bordered w-full"
+            />
+            {errors.photoURL && (
+              <p className="text-red-600 mt-1">{errors.photoURL.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="block mb-1 font-semibold text-subtitle"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              {...register('password', { required: 'Password is required' })}
+              placeholder="Your password"
+              className="input input-bordered w-full"
+            />
+            {errors.password && (
+              <p className="text-red-600 mt-1">{errors.password.message}</p>
+            )}
+          </div>
+
           <button
             type="submit"
-            className="btn btn-primary w-full"
+            className="btn-luxury w-full py-3 text-lg font-semibold"
             disabled={loading}
           >
             {loading ? 'Registering...' : 'Register'}
           </button>
         </form>
-        <p className="text-center mt-4">
+        <p className="text-center mt-6 text-secondary">
           Already have an account?{' '}
-          <a href="/login" className="text-blue-600 underline">
+          <a href="/login" className="text-accent font-medium hover:underline">
             Login
           </a>
         </p>

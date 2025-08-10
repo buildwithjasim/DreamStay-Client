@@ -1,3 +1,64 @@
 @import 'tailwindcss';
 @plugin "daisyui";
 @import 'leaflet/dist/leaflet.css';
+
+:root {
+  --color-bg: #f5f3f1; /* Soft Ivory Background */
+  --color-text: #4b4b4b; /* Charcoal Gray Text */
+  --color-accent: #d4af37; /* Classic Gold */
+  --color-secondary: #6f6f6f; /* Medium Gray */
+  --color-highlight: #0f4c81; /* Rich Navy Blue */
+}
+
+[data-theme='luxury-light'] {
+  --color-bg: #f5f3f1; /* Soft Ivory */
+  --color-text: #3c3c3c; /* Deep Charcoal */
+  --color-accent: #d4af37; /* Premium Gold */
+  --color-secondary: #6f6f6f; /* Warm Gray */
+  --color-highlight: #0f4c81; /* Deep Blue (Luxury Accent) */
+}
+
+[data-theme='luxury-dark'] {
+  --color-bg: #2b2118; /* Dark Cocoa Brown */
+  --color-text: #e5d3b3; /* Soft Gold Text */
+  --color-accent: #b68d27; /* Muted Gold for Buttons */
+  --color-secondary: #d9cfa3; /* Pale Beige */
+  --color-highlight: #8faadc; /* Muted Blue Highlight */
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.bg-luxury {
+  background-color: var(--color-bg);
+}
+
+.text-luxury {
+  color: var(--color-text);
+}
+
+.text-heading {
+  color: var(--color-highlight);
+  font-weight: 700;
+}
+
+.text-subtitle {
+  color: var(--color-secondary);
+}
+
+.btn-luxury {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-luxury:hover {
+  background-color: var(--color-highlight);
+  color: var(--color-bg);
+}

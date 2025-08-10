@@ -6,20 +6,20 @@ const slides = [
   {
     id: 'slide1',
     bgImage: 'https://i.ibb.co/TDfHfg2s/banner1.jpg',
-    title: 'Welcome to DreamStay',
+    title: 'Experience Ultimate Luxury',
     subtitle:
-      'Discover your perfect stay with top-rated rooms and luxury service.',
-    btnText: 'Explore Rooms',
+      'Stay in our exquisite rooms featuring modern elegance and unmatched comfort.',
+    btnText: 'Discover Our Rooms',
     btnLink: '/rooms',
     titleColor: 'white',
     subtitleColor: 'white',
   },
   {
     id: 'slide2',
-    bgImage: 'https://i.ibb.co/N28vSpDp/room8.png', // fixed broken URL
-    title: 'Modern Rooms & Comfort',
-    subtitle: 'Experience a luxury stay tailored to your comfort and style.',
-    btnText: 'Explore Rooms',
+    bgImage: 'https://i.ibb.co/N28vSpDp/room8.png',
+    title: 'Unwind in Style',
+    subtitle: 'Relax in thoughtfully designed spaces tailored just for you.',
+    btnText: 'View Room Options',
     btnLink: '/rooms',
     titleColor: 'white',
     subtitleColor: 'white',
@@ -27,9 +27,10 @@ const slides = [
   {
     id: 'slide3',
     bgImage: 'https://i.ibb.co/5Wxnr3Nv/banner4.jpg',
-    title: 'Book. Relax. Enjoy.',
-    subtitle: 'Easy online booking with amazing deals & special offers.',
-    btnText: 'Explore Rooms',
+    title: 'Book Your Dream Stay Today',
+    subtitle:
+      'Enjoy seamless booking with exclusive deals and personalized service.',
+    btnText: 'Book Now',
     btnLink: '/rooms',
     titleColor: 'white',
     subtitleColor: 'white',
@@ -46,7 +47,7 @@ export default function Banner() {
 
   return (
     <section
-      className="relative w-full h-[70vh] max-h-[600px] overflow-hidden mt-16 "
+      className="relative w-full h-[70vh] max-h-[600px] overflow-hidden mt-16 rounded"
       aria-label="Homepage Hero Section"
     >
       <AnimatePresence mode="wait">
@@ -61,8 +62,11 @@ export default function Banner() {
           aria-live="polite"
           aria-atomic="true"
         >
-          {/* Dark overlay for text contrast */}
-          <div className="absolute inset-0 bg-opacity-60"></div>
+          {/* Overlay with theme color and opacity */}
+          <div
+            className="absolute inset-0 bg-black"
+            style={{ opacity: 0.4 }}
+          ></div>
 
           {/* Content Container */}
           <div className="relative flex flex-col justify-center items-center h-full text-center px-6 sm:px-12 md:px-20 max-w-5xl mx-auto">
@@ -92,7 +96,7 @@ export default function Banner() {
       <button
         onClick={prevSlide}
         aria-label="Previous Slide"
-        className="absolute left-5 top-1/2 -translate-y-1/2 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 text-white w-12 h-12 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary transition"
+        className="absolute left-5 top-1/2 -translate-y-1/2 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 text-white w-12 h-12 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +118,7 @@ export default function Banner() {
       <button
         onClick={nextSlide}
         aria-label="Next Slide"
-        className="absolute right-5 top-1/2 -translate-y-1/2 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 text-white w-12 h-12 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary transition"
+        className="absolute right-5 top-1/2 -translate-y-1/2 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 text-white w-12 h-12 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -140,9 +144,9 @@ export default function Banner() {
             key={slide.id}
             onClick={() => setCurrent(index)}
             aria-label={`Go to slide ${index + 1}`}
-            className={`w-4 h-4 rounded-full focus:outline-none focus:ring-2 focus:ring-primary transition ${
+            className={`w-4 h-4 rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition ${
               index === current
-                ? 'bg-primary'
+                ? 'bg-[var(--color-accent)]'
                 : 'bg-white bg-opacity-50 hover:bg-opacity-80'
             }`}
           />

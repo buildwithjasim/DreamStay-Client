@@ -21,40 +21,44 @@ const FeaturedRooms = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-20">
-        <span
-          className="loading loading-spinner loading-lg"
-          aria-live="polite"
-        />
+      <div
+        className="flex justify-center items-center py-20"
+        aria-live="polite"
+        aria-busy="true"
+      >
+        <span className="loading loading-spinner loading-lg" />
       </div>
     );
   }
 
   if (rooms.length === 0) {
     return (
-      <section className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 py-12 text-center text-gray-500">
-        <h2 className="text-3xl font-bold mb-4 text-primary">Featured Rooms</h2>
+      <section
+        className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 py-12 text-center text-secondary"
+        aria-live="polite"
+      >
+        <h2 className="text-3xl font-bold mb-4 text-accent">Featured Rooms</h2>
         <p>No featured rooms available right now. Please check back soon.</p>
       </section>
     );
   }
 
   return (
-    <section className=" py-12" aria-label="Featured Rooms">
-      <h2 className="text-4xl font-extrabold text-center mb-3 text-primary">
+    <section className="py-12 bg-luxury" aria-label="Featured Rooms">
+      <h2 className="text-4xl font-extrabold text-center mb-3 text-accent">
         Featured Rooms
       </h2>
-      <p className="max-w-3xl mx-auto text-center text-gray-600 mb-12 text-lg md:text-xl">
+      <p className="max-w-3xl mx-auto text-center text-secondary mb-12 text-lg md:text-xl">
         Discover our exclusive selection of rooms tailored to your comfort and
         style.
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 ">
         {rooms.slice(0, 6).map(room => (
           <article
             key={room._id}
             tabIndex={0}
-            className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300 flex flex-col"
+            className="bg-color-bg rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300 flex flex-col"
             style={{ minHeight: '450px' }}
             aria-label={`Room titled ${room.title}`}
           >
@@ -67,14 +71,15 @@ const FeaturedRooms = () => {
               />
             </div>
 
-            <div className="flex flex-col flex-grow p-6">
+            <div className="flex flex-col flex-grow p-6 text-text">
               <h3
-                className="text-2xl font-semibold mb-2 text-gray-900 truncate"
+                className="text-2xl font-semibold mb-2 truncate"
                 title={room.title}
+                style={{ color: 'var(--color-highlight)' }}
               >
                 {room.title}
               </h3>
-              <p className="text-gray-700 flex-grow line-clamp-3 mb-4">
+              <p className="flex-grow line-clamp-3 mb-4 text-secondary">
                 {room.description}
               </p>
 
@@ -83,7 +88,7 @@ const FeaturedRooms = () => {
                   {room.features.map((feature, idx) => (
                     <li
                       key={idx}
-                      className="bg-primary/20 text-primary text-xs font-medium px-3 py-1 rounded-full select-none"
+                      className="bg-accent/20 text-accent text-xs font-medium px-3 py-1 rounded-full select-none"
                       title={feature}
                     >
                       {feature}
@@ -92,7 +97,10 @@ const FeaturedRooms = () => {
                 </ul>
               )}
 
-              <div className="flex items-center justify-between text-gray-900 font-semibold mb-4">
+              <div
+                className="flex items-center justify-between font-semibold mb-4"
+                style={{ color: 'var(--color-text)' }}
+              >
                 <span className="text-xl">${room.price}/night</span>
                 <span
                   className="flex items-center gap-1 text-yellow-400"
@@ -116,7 +124,7 @@ const FeaturedRooms = () => {
               <button
                 type="button"
                 onClick={() => handleBookNow(room._id)}
-                className="mt-auto bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary-dark focus:outline-none focus:ring-4 focus:ring-primary/50 transition"
+                className="mt-auto btn-luxury focus:outline-none focus:ring-4 focus:ring-accent/50 transition"
                 aria-label={`Book now for ${room.title}`}
               >
                 Book Now

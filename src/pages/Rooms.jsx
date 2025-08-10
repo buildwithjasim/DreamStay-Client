@@ -35,7 +35,7 @@ const Rooms = () => {
   };
 
   return (
-    <div className="bg-[#f7f7f7] min-h-screen py-12 px-4">
+    <div className="min-h-screen py-12 px-4 bg-luxury text-luxury transition-colors duration-300">
       <Helmet>
         <title>Rooms | DreamStay</title>
         <meta
@@ -44,7 +44,7 @@ const Rooms = () => {
         />
       </Helmet>
 
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
+      <h1 className="text-3xl font-bold text-center mb-8 text-heading">
         Filter Rooms by Price
       </h1>
 
@@ -59,6 +59,10 @@ const Rooms = () => {
           value={minPrice}
           onChange={e => setMinPrice(e.target.value)}
           className="input input-bordered w-full md:w-1/2"
+          style={{
+            color: 'var(--color-text)',
+            backgroundColor: 'var(--color-bg)',
+          }}
         />
         <input
           type="number"
@@ -66,15 +70,19 @@ const Rooms = () => {
           value={maxPrice}
           onChange={e => setMaxPrice(e.target.value)}
           className="input input-bordered w-full md:w-1/2"
+          style={{
+            color: 'var(--color-text)',
+            backgroundColor: 'var(--color-bg)',
+          }}
         />
-        <button type="submit" className="btn btn-primary w-full md:w-auto">
+        <button type="submit" className="btn-luxury w-full md:w-auto">
           Filter
         </button>
       </form>
 
       {/* Rooms Display */}
       {loading ? (
-        <div className="text-center text-lg font-semibold">
+        <div className="text-center text-lg font-semibold text-accent">
           <span className="loading loading-bars loading-md"></span>
         </div>
       ) : (
@@ -85,7 +93,8 @@ const Rooms = () => {
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="card bg-white shadow-md hover:shadow-lg transition max-w-sm"
+                  className="card bg-luxury shadow-md hover:shadow-lg transition max-w-sm"
+                  style={{ color: 'var(--color-text)' }}
                 >
                   <figure>
                     <img
@@ -95,15 +104,18 @@ const Rooms = () => {
                     />
                   </figure>
                   <div className="card-body overflow-x-auto">
-                    <h2 className="text-xl font-bold whitespace-nowrap">
+                    <h2 className="text-xl font-bold whitespace-nowrap text-heading">
                       {room.title}
                     </h2>
 
-                    <p className="text-sm text-gray-500 whitespace-nowrap line-clamp-3">
+                    <p className="text-sm text-subtitle whitespace-nowrap line-clamp-3">
                       {room.description}
                     </p>
 
-                    <p className="text-lg font-semibold text-[#ffc107]">
+                    <p
+                      className="text-lg font-semibold"
+                      style={{ color: 'var(--color-accent)' }}
+                    >
                       ${room.price}
                     </p>
                   </div>
