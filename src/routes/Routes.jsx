@@ -26,7 +26,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/rooms/:id',
-        element: <RoomDetails />,
+        element: (
+          <PrivateRoute>
+            <RoomDetails />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/mybooking',
